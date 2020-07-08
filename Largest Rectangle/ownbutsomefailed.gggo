@@ -1,0 +1,123 @@
+package main
+
+import (
+    "bufio"
+    "fmt"
+    "io"
+    "os"
+    "strconv"
+    "strings"
+)
+
+// Complete the largestRectangle function below.
+func largestRectangle(h []int32) int64 {
+    var stack []int32
+
+    top := int32(0)
+    area := int32(0)
+    maxArea := int64(-1)
+
+    for i:=int32(0);i<=int32(len(h));i++{
+        if len(stack) == 0 {
+            // Push
+            stack = append(stack, i)
+        }else{
+            if i != int32(len(h)){
+                if h[i] >= h[stack[len(stack)-1]]{
+                    // Push
+                    stack = append(stack, i)
+                }else{
+                    for h[i] < h[stack[len(stack)-1]]{
+                        // Pop
+                        top = stack[len(stack)-1]
+                        stack = stack[:len(stack)-1]
+
+                        if len(stack) > 0{
+                            area = h[top] *(i-stack[len(stack)-1]-1)
+                        }else{
+                            area = top * i
+                        }
+
+                        if int64(area) > maxArea{
+                            maxArea = int64(area)
+                        }
+
+                        if len(stack) == 0{
+                            // Push
+                            stack = append(stack, i)
+                        }else if h[i] >= h[stack[len(stack)-1]]{
+                            // Push
+                            stack = append(stack, i)
+                        }
+                    }
+                }
+            }else if i == int32(len(h)){
+                for len(stack) > 0{
+                    // Pop
+                    top = stack[len(stack)-1]
+                    stack = stack[:len(stack)-1]
+
+                    if len(stack) > 0{
+                        area = h[top] *(i-stack[len(stack)-1]-1)
+                    }else{
+                        area = h[top] * i
+                    }
+
+                    if int64(area) > maxArea{
+                        maxArea = int64(area)
+                    }
+                }
+            }
+        }
+    }
+
+    return maxArea
+
+}
+
+func main() {
+    reader := bufio.NewReaderSize(os.Stdin, 1024 * 1024)
+
+    stdout, err := os.Create(os.Getenv("OUTPUT_PATH"))
+    checkError(err)
+
+    defer stdout.Close()
+
+    writer := bufio.NewWriterSize(stdout, 1024 * 1024)
+
+    nTemp, err := strconv.ParseInt(readLine(reader), 10, 64)
+    checkError(err)
+    n := int32(nTemp)
+
+    hTemp := strings.Split(readLine(reader), " ")
+
+    var h []int32
+
+    for i := 0; i < int(n); i++ {
+        hItemTemp, err := strconv.ParseInt(hTemp[i], 10, 64)
+        checkError(err)
+        hItem := int32(hItemTemp)
+        h = append(h, hItem)
+    }
+
+    result := largestRectangle(h)
+
+    fmt.Fprintf(writer, "%d\n", result)
+
+    writer.Flush()
+}
+
+func readLine(reader *bufio.Reader) string {
+    str, _, err := reader.ReadLine()
+    if err == io.EOF {
+        return ""
+    }
+
+    return strings.TrimRight(string(str), "\r\n")
+}
+
+func checkError(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
