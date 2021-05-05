@@ -30,9 +30,7 @@ type OccupancyDetail struct {
 func main() {
 
 	data := generateRawData()
-	// data := generateRawData2()
 	agg := generalAggregator(data)
-
 	occupancy := calculateOccupancy(agg)
 
 	jsonData, _ := json.Marshal(occupancy)
@@ -77,23 +75,6 @@ func generateRawData() map[string]map[string]float32 {
 		data[tanggal]["percentage"] = 40.5 * float32(i)
 		data[tanggal]["total_pods"] = 60 * float32(i)
 		data[tanggal]["pods_sold"] = 50 * float32(i)
-
-	}
-
-	return data
-}
-
-// Total Occupancy Rate
-func generateRawData2() map[int]map[string]float32 {
-	var data = map[int]map[string]float32{}
-
-	for i := 1; i < 9; i++ {
-
-		data[i] = make(map[string]float32)
-
-		data[i]["percentage"] = 97.5 * float32(i)
-		data[i]["total_pods"] = 55 * float32(i)
-		data[i]["pods_sold"] = 50 * float32(i)
 
 	}
 
