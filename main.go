@@ -3,13 +3,14 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 )
 
 // importing time module
 
 // Main function
-func main() {
+func mainxx() {
 
 	var (
 		testTime   time.Time
@@ -54,4 +55,38 @@ func main() {
 	// g2 := tomorrow.After(today)
 	// fmt.Println("tomorrow after today:", g2)
 
+}
+
+// Returns an int >= min, < max
+func randomInt(min, max int) int {
+	return min + rand.Intn(max-min)
+}
+
+// Generate a random string of A-Z chars with len = l
+func randomString(len int) string {
+	bytes := make([]byte, len)
+	for i := 0; i < len; i++ {
+		bytes[i] = byte(randomInt(65, 90))
+	}
+	return string(bytes)
+}
+
+func main() {
+	amap := make(map[int]map[int]map[int]string)
+
+	amap[1000] = make(map[int]map[int]string)
+	amap[1000][1] = map[int]string{}
+	amap[1000][1][90000] = "2021-06-01,2021-06-02"
+
+	for k1, v1 := range amap {
+		for k2, v2 := range v1 {
+			for k3, v3 := range v2 {
+				fmt.Println(k1, k2, k3, v3)
+			}
+		}
+	}
+}
+
+func makeTimestamp() int64 {
+	return time.Now().UnixNano() / int64(time.Millisecond)
 }
